@@ -22,4 +22,5 @@ public class CalculatorServer {
         //for grpc to be blocking for the main thread
         server.awaitTermination();
     }
+
 }

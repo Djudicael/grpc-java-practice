@@ -17,7 +17,8 @@ public class App {
     public static void main(String[] args) throws IOException, InterruptedException {
         System.out.println(new App().getGreeting());
         Server server = ServerBuilder.forPort(50051)
-                .addService(new GreetServiceImpl()).build();
+                .addService(new GreetServiceImpl())
+                .build();
 
         server.start();
 
