@@ -11,7 +11,7 @@ public class GreetServiceImpl extends GreetServiceGrpc.GreetServiceImplBase {
         String firstname = greeting.getFirstName();
         String lastname = greeting.getLastName();
 
-        String result = "Hello "+ firstname;
+        String result = "Hello " + firstname;
 
         GreetResponse response = GreetResponse.newBuilder().setResult(result).build();
 
@@ -29,8 +29,8 @@ public class GreetServiceImpl extends GreetServiceGrpc.GreetServiceImplBase {
         String firstname = greeting.getFirstName();
 
         try {
-            for(int i =0; i<10; i++){
-                String result = "Hello "+ firstname+", response number"+i;
+            for (int i = 0; i < 10; i++) {
+                String result = "Hello " + firstname + ", response number" + i;
                 GreetManyTimesResponse response = GreetManyTimesResponse.newBuilder().setResult(result).build();
                 //send the response
                 responseObserver.onNext(response);
@@ -43,9 +43,39 @@ public class GreetServiceImpl extends GreetServiceGrpc.GreetServiceImplBase {
         } finally {
             responseObserver.onCompleted();
         }
+    }
 
+    @Override
+    public StreamObserver<LongGreetRequest> longGreet(StreamObserver<LongGreetResponse> responseObserver) {
 
+        StreamObserver<LongGreetRequest> streamObserver = new StreamObserver<LongGreetRequest>() {
 
+            String result="";
 
+            @Override
+            public void onNext(LongGreetRequest value) {
+                //client sends a message
+
+                result += "Hello " + value.getGreeting().getFirstName() + " !";
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                //client send a error
+
+            }
+
+            @Override
+            public void onCompleted() {
+                //client is done
+
+                responseObserver.onNext(LongGreetResponse.newBuilder().setResult(result).build());
+
+                responseObserver.onCompleted();
+
+                //this this when we want to return a response(responseObserver)
+            }
+        };
+        return streamObserver;
     }
 }
